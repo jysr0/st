@@ -1,7 +1,7 @@
 # st 0.9.3 build
 ## INSTALATION
-1. git clone https://github.com/jysr0/st && cd st
-2. sudo make clean install && reboot
+1. `git clone https://github.com/jysr0/st && cd st`
+2. `sudo make clean install && reboot`
 
 ## PATCHES
 [alpha](https://st.suckless.org/patches/alpha/). <br />
