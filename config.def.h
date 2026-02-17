@@ -276,21 +276,26 @@ static uint forcemousemod = ShiftMask;
  */
 const unsigned int mousescrollincrement = 3;
 static MouseShortcut mshortcuts[] = {
-	/* mask                 button   function        argument       release */
-	//scrollback
-	//{ ShiftMask,            Button4, kscrollup,      {.i = 1} },
-	//{ ShiftMask,            Button5, kscrolldown,    {.i = 1} },
-	//{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 1},		0, /* !alt */ -1 },
-	//{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 1},		0, /* !alt */ -1 },
-	{ XK_ANY_MOD,            Button4, kscrollup,      {.i = mousescrollincrement} },
-	{ XK_ANY_MOD,            Button5, kscrolldown,    {.i = mousescrollincrement} },
+	/* mask                   button              function        argument                         release */
+	
+	{ ShiftMask,              Button4,            ttysend,        {.s = "\033[5;2~"}                 },
+	{ XK_ANY_MOD,             Button4,            ttysend,        {.s = "\031"}                      },
+	{ ShiftMask,              Button5,            ttysend,        {.s = "\033[6;2~"}                 },
+	{ XK_ANY_MOD,             Button5,            ttysend,        {.s = "\005"}                      },
+	
+	// paste selection
+	{ XK_ANY_MOD,             Button2,            selpaste,       {.i = 0},                        1 },
+	
+	// scrollback
+	//{ ShiftMask,            Button4,            kscrollup,      {.i = 1}                           },
+	//{ ShiftMask,            Button5,            kscrolldown,    {.i = 1}                           },
+	//{ XK_ANY_MOD,           Button4,            kscrollup,      {.i = 1},		0, /* !alt */ -1 },
+	//{ XK_ANY_MOD,           Button5,            kscrolldown,    {.i = 1},		0, /* !alt */ -1 },
+	{ XK_ANY_MOD,             Button4,            kscrollup,      {.i = mousescrollincrement}        },
+	{ XK_ANY_MOD,             Button5,            kscrolldown,    {.i = mousescrollincrement}        },
 
-
-	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
-	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
-	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
-	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
-	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"} },
+	// clickurl
+	// hold ControlMask then mouse button 1 to click on a URL.
 };
 
 /* Internal keyboard shortcuts. */
@@ -298,48 +303,54 @@ static MouseShortcut mshortcuts[] = {
 #define TERMMOD (ControlMask|ShiftMask)
 
 static Shortcut shortcuts[] = {
-	/* mask                 keysym          function        argument */
-	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	/* mask                              keysym                         function                         argument */
+	
+	{ XK_ANY_MOD,                        XK_Break,                      sendbreak,                       {.i =  0} },
+	{ ControlMask,                       XK_Print,                      toggleprinter,                   {.i =  0} },
+	{ ShiftMask,                         XK_Print,                      printscreen,                     {.i =  0} },
+	{ XK_ANY_MOD,                        XK_Print,                      printsel,                        {.i =  0} },
 
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+	// zoom
+	{ TERMMOD,                           XK_Prior,                      zoom,                            {.f = +1} },
+	{ TERMMOD,                           XK_Next,                       zoom,                            {.f = -1} },
+	{ TERMMOD,                           XK_Home,                       zoomreset,                       {.f =  0} },
+
+	// copy/paste
+	{ TERMMOD,                           XK_C,                          clipcopy,                        {.i =  0} },
+	{ TERMMOD,                           XK_V,                          clippaste,                       {.i =  0} },
+	{ TERMMOD,                           XK_Y,                          selpaste,                        {.i =  0} },
+	{ ShiftMask,                         XK_Insert,                     selpaste,                        {.i =  0} },
+
+	// numpad lock/unlock
+	{ TERMMOD,                           XK_Num_Lock,                   numlock,                         {.i =  0} },
 	
 	// changealpha
-	{ MODKEY,               XK_bracketleft, chgalpha,       {.f = -1} }, /* Decrease opacity */
-	{ MODKEY,               XK_bracketright,chgalpha,       {.f = +1} }, /* Increase opacity */
-	{ MODKEY|ShiftMask,     XK_braceright, chgalpha,       {.f =  0} }, /* Reset opacity */
+	{ MODKEY,                            XK_bracketleft,                chgalpha,                        {.f = -1} }, /* Decrease opacity */
+	{ MODKEY,                            XK_bracketright,               chgalpha,                        {.f = +1} }, /* Increase opacity */
+	{ MODKEY|ShiftMask,                  XK_braceright,                 chgalpha,                        {.f =  0} }, /* Reset opacity */
 
 	//colorschemes
-	//{ MODKEY,               XK_1,           selectscheme,   {.i =  0} },
-	//{ MODKEY,               XK_2,           selectscheme,   {.i =  1} },
-	//{ MODKEY,               XK_3,           selectscheme,   {.i =  2} },
-	//{ MODKEY,               XK_4,           selectscheme,   {.i =  3} },
-	//{ MODKEY,               XK_5,           selectscheme,   {.i =  4} },
-	//{ MODKEY,               XK_6,           selectscheme,   {.i =  5} },
-	//{ MODKEY,               XK_7,           selectscheme,   {.i =  6} },
-	//{ MODKEY,               XK_8,           selectscheme,   {.i =  7} },
-	//{ MODKEY,               XK_9,           selectscheme,   {.i =  8} },
-	{ MODKEY,               XK_0,           nextscheme,     {.i = +1} },
-	//{ MODKEY|ControlMask,   XK_0,           nextscheme,     {.i = -1} },
+	//{ MODKEY,                          XK_1,                          selectscheme,                    {.i =  0} },
+	//{ MODKEY,                          XK_2,                          selectscheme,                    {.i =  1} },
+	//{ MODKEY,                          XK_3,                          selectscheme,                    {.i =  2} },
+	//{ MODKEY,                          XK_4,                          selectscheme,                    {.i =  3} },
+	//{ MODKEY,                          XK_5,                          selectscheme,                    {.i =  4} },
+	//{ MODKEY,                          XK_6,                          selectscheme,                    {.i =  5} },
+	//{ MODKEY,                          XK_7,                          selectscheme,                    {.i =  6} },
+	//{ MODKEY,                          XK_8,                          selectscheme,                    {.i =  7} },
+	//{ MODKEY,                          XK_9,                          selectscheme,                    {.i =  8} },
+	{ MODKEY,                            XK_0,                          nextscheme,                      {.i = +1} },
+	//{ MODKEY|ControlMask,              XK_0,                          nextscheme,                      {.i = -1} },
 
 	//newterm
-	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
+	{ TERMMOD,                           XK_Return,                     newterm,                         {.i =  0} },
 
 	//scrollback
-	{ ShiftMask,            XK_Page_Down,     kscrollup,      {.i = -1} },
-        { ShiftMask,            XK_Page_Up,   kscrolldown,    {.i = -1} },
+	{ ShiftMask,                         XK_Page_Down,                  kscrollup,                       {.i = -1} },
+        { ShiftMask,                         XK_Page_Up,                    kscrolldown,                     {.i = -1} },
 
 	//xrandrfontsize
-	{ TERMMOD,              XK_End,         refreshxrandr,  {.i =  0} },
+	{ TERMMOD,                           XK_End,                        refreshxrandr,                   {.i =  0} },
 };
 
 /*
