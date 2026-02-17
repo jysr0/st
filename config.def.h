@@ -297,7 +297,7 @@ static MouseShortcut mshortcuts[] = {
 	{ XK_ANY_MOD,                            Button5,            kscrolldown,    {.i = mousescrollincrement}        },
 
 	// clickurl
-	// hold ControlMask then mouse button 1 to click on a URL.
+	// hold ControlMask then mouse button 1 to click on a URL. NOTE: if capslock is on, URLs won't open.
 };
 
 /* Internal keyboard shortcuts. */
