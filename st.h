@@ -37,11 +37,11 @@ enum glyph_attribute {
 	ATTR_STRUCK     = 1 << 8,
 	ATTR_WRAP       = 1 << 9,
 	ATTR_WIDE       = 1 << 10,
-	ATTR_WDUMMY     = 1 << 11,
-	ATTR_BOXDRAW    = 1 << 12,
-	ATTR_SELECTED   = 1 << 13,
+	ATTR_URL        = 1 << 11,
+	ATTR_WDUMMY     = 1 << 12,
+	ATTR_BOXDRAW    = 1 << 13,
+	ATTR_SELECTED   = 1 << 14,
 	ATTR_BOLD_FAINT = ATTR_BOLD | ATTR_FAINT,
-	ATTR_URL	= 1 << 14,
 };
 
 enum selection_mode {
@@ -120,9 +120,9 @@ void selextend(int, int, int, int);
 int selected(int, int);
 char *getsel(void);
 
-void highlighturls(void);
-void unhighlighturls(void);
-void followurl(int, int);
+void highlighturlsline(int);
+void unhighlighturlsline(int);
+int followurl(int, int);
 
 size_t utf8encode(Rune, char *);
 

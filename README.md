@@ -12,7 +12,7 @@ see config.def.h's mshortcuts and shortcuts arrays.
 [blinking cursor](https://st.suckless.org/patches/blinking_cursor/). <br />
 [boxdraw](https://st.suckless.org/patches/boxdraw/). <br />
 [anysize](https://st.suckless.org/patches/anysize/), "expected" one. <br />
-[clickurl](https://st.suckless.org/patches/clickurl/). <br />
+[clickurl nocontrol](https://st.suckless.org/patches/clickurl-nocontrol/). <br />
 [colorschemes](https://st.suckless.org/patches/colorschemes/). <br />
 [drag n drop](https://st.suckless.org/patches/drag-n-drop/). <br />
 [dynamic cursor color](https://st.suckless.org/patches/dynamic-cursor-color/). <br />

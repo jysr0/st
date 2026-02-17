@@ -588,6 +588,92 @@ selected(int x, int y)
 }
 
 
+char *
+strstrany(char* s, char** strs) {
+	char *match;
+	for (int i = 0; strs[i]; i++) {
+		if ((match = strstr(s, strs[i]))) {
+			return match;
+		}
+	}
+	return NULL;
+}
+
+void
+highlighturlsline(int row)
+{
+	char *linestr = calloc(sizeof(char), term.col+1); /* assume ascii */
+	char *match;
+	for (int j = 0; j < term.col; j++) {
+		if (term.line[row][j].u < 127) {
+			linestr[j] = term.line[row][j].u;
+		}
+		linestr[term.col] = '\0';
+	}
+	int url_start = -1;
+	while ((match = strstrany(linestr + url_start + 1, urlprefixes))) {
+		url_start = match - linestr;
+		for (int c = url_start; c < term.col && strchr(urlchars, linestr[c]); c++) {
+			term.line[row][c].mode |= ATTR_URL;
+			tsetdirt(row, c);
+		}
+	}
+	free(linestr);
+}
+
+void
+unhighlighturlsline(int row)
+{
+	for (int j = 0; j < term.col; j++) {
+		Glyph* g = &term.line[row][j];
+		if (g->mode & ATTR_URL) {
+			g->mode &= ~ATTR_URL;
+			tsetdirt(row, j);
+		}
+	}
+	return;
+}
+
+int
+followurl(int col, int row) {
+	char *linestr = calloc(sizeof(char), term.col+1); /* assume ascii */
+	char *match;
+	for (int i = 0; i < term.col; i++) {
+		if (term.line[row][i].u < 127) {
+			linestr[i] = term.line[row][i].u;
+		}
+		linestr[term.col] = '\0';
+	}
+	int url_start = -1, found_url = 0;
+	while ((match = strstrany(linestr + url_start + 1, urlprefixes))) {
+		url_start = match - linestr;
+		int url_end = url_start;
+		for (int c = url_start; c < term.col && strchr(urlchars, linestr[c]); c++) {
+			url_end++;
+		}
+		if (url_start <= col && col < url_end) {
+			found_url = 1;
+			linestr[url_end] = '\0';
+			break;
+		}
+	}
+	if (!found_url) {
+		free(linestr);
+		return 0;
+	}
+
+	pid_t chpid;
+	if ((chpid = fork()) == 0) {
+		if (fork() == 0)
+			execlp(urlhandler, urlhandler, linestr + url_start, NULL);
+		exit(1);
+	}
+	if (chpid > 0)
+		waitpid(chpid, NULL, 0);
+	free(linestr);
+    return 1;
+}
+
 void
 selsnap(int *x, int *y, int direction)
 {
@@ -711,94 +797,6 @@ getsel(void)
 	return str;
 }
 
-char *
-strstrany(char* s, char** strs) {
-	char *match;
-	for (int i = 0; strs[i]; i++) {
-		if ((match = strstr(s, strs[i]))) {
-			return match;
-		}
-	}
-	return NULL;
-}
-
-void
-highlighturls(void)
-{
-	char *match;
-	char *linestr = calloc(sizeof(char), term.col+1); /* assume ascii */
-	for (int i = term.top; i < term.bot; i++) {
-		int url_start = -1;
-		for (int j = 0; j < term.col; j++) {
-			if (term.line[i][j].u < 127) {
-				linestr[j] = term.line[i][j].u;
-			}
-			linestr[term.col] = '\0';
-		}
-		while ((match = strstrany(linestr + url_start + 1, urlprefixes))) {
-			url_start = match - linestr;
-			for (int c = url_start; c < term.col && strchr(urlchars, linestr[c]); c++) {
-				term.line[i][c].mode |= ATTR_URL;
-				tsetdirt(i, c);
-			}
-		}
-	}
-	free(linestr);
-}
-
-void
-unhighlighturls(void)
-{
-	for (int i = term.top; i < term.bot; i++) {
-		for (int j = 0; j < term.col; j++) {
-			Glyph* g = &term.line[i][j];
-			if (g->mode & ATTR_URL) {
-				g->mode &= ~ATTR_URL;
-				tsetdirt(i, j);
-			}
-		}
-	}
-	return;
-}
-
-void
-followurl(int x, int y) {
-	char *linestr = calloc(sizeof(char), term.col+1); /* assume ascii */
-	char *match;
-	for (int i = 0; i < term.col; i++) {
-		if (term.line[x][i].u < 127) {
-			linestr[i] = term.line[x][i].u;
-		}
-		linestr[term.col] = '\0';
-	}
-	int url_start = -1;
-	while ((match = strstrany(linestr + url_start + 1, urlprefixes))) {
-		url_start = match - linestr;
-		int url_end = url_start;
-		for (int c = url_start; c < term.col && strchr(urlchars, linestr[c]); c++) {
-			url_end++;
-		}
-		if (url_start <= y && y < url_end) {
-			linestr[url_end] = '\0';
-			break;
-		}
-	}
-	if (url_start == -1) {
-		free(linestr);
-		return;
-	}
-
-	pid_t chpid;
-	if ((chpid = fork()) == 0) {
-		if (fork() == 0)
-			execlp(urlhandler, urlhandler, linestr + url_start, NULL);
-		exit(1);
-	}
-	if (chpid > 0)
-		waitpid(chpid, NULL, 0);
-	free(linestr);
-	unhighlighturls();
-}
 
 void
 selclear(void)
@@ -3362,6 +3360,8 @@ drawregion(int x1, int y1, int x2, int y2)
 			continue;
 
 		term.dirty[y] = 0;
+		unhighlighturlsline(y);
+		highlighturlsline(y);
 		xdrawline(TLINE(y), x1, y, x2);
 	}
 }
