@@ -3,6 +3,9 @@
 1. `git clone https://github.com/jysr0/st && cd st`
 2. `sudo make clean install && reboot`
 
+### keybinds
+see config.def.h's mshortcuts and shortcuts arrays.
+
 ## PATCHES
 [alpha](https://st.suckless.org/patches/alpha/). <br />
 [changealpha](https://st.suckless.org/patches/changealpha/), no "alpha". <br />
