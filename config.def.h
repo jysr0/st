@@ -5,10 +5,10 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "CaskaydiaMono NFM:style=Regular:pixelsize=13:antialias=true:autohint=true";
+static char *font = "CaskaydiaMono NFM:style=SemiLight:pixelsize=14:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
-"CaskaydiaMono NFM:style=Regular:pixelsize=13:antialias=true:autohint=true",
+"CaskaydiaMono NFM:style=SemiLight:pixelsize=14:antialias=true:autohint=true",
 /*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
 /*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
 };
