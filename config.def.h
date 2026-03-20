@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "DejaVuSansM Nerd Font Mono:style=Regular:pixelsize=13:antialias=true:autohint=true";
+static char *font = "DejaVuSansM Nerd Font Mono:style=Regular:pixelsize=14:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
     "DejaVuSansM Nerd Font Mono"
@@ -311,9 +311,9 @@ static Shortcut shortcuts[] = {
 	{ XK_ANY_MOD,                        XK_Print,                      printsel,                        {.i =  0} },
 
 	// zoom
-	{ TERMMOD,                           XK_Prior,                      zoom,                            {.f = +1} },
-	{ TERMMOD,                           XK_Next,                       zoom,                            {.f = -1} },
-	{ TERMMOD,                           XK_Home,                       zoomreset,                       {.f =  0} },
+	{ TERMMOD,                           XK_plus,                       zoom,                            {.f = +1} },
+	{ ControlMask,                       XK_minus,                      zoom,                            {.f = -1} },
+	{ ControlMask,                       XK_0,                          zoomreset,                       {.f =  0} },
 
 	// copy/paste
 	{ TERMMOD,                           XK_C,                          clipcopy,                        {.i =  0} },
@@ -346,8 +346,8 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,                           XK_Return,                     newterm,                         {.i =  0} },
 
 	//scrollback
-	{ ShiftMask,                         XK_Page_Down,                  kscrollup,                       {.i = -1} },
-        { ShiftMask,                         XK_Page_Up,                    kscrolldown,                     {.i = -1} },
+	{ XK_NO_MOD,                         XK_Page_Down,                  kscrollup,                       {.i = -1} },
+    { XK_NO_MOD,                         XK_Page_Up,                    kscrolldown,                     {.i = -1} },
 
 	//xrandrfontsize
 	{ TERMMOD,                           XK_End,                        refreshxrandr,                   {.i =  0} },
