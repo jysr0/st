@@ -5,10 +5,10 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "CaskaydiaMono NFM:style=Regular:pixelsize=13:antialias=true:autohint=true";
+static char *font = "DejaVuSansM Nerd Font Mono:style=Regular:pixelsize=13:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
-    "CaskaydiaMono NFM"
+    "DejaVuSansM Nerd Font Mono"
 };
 
 static int borderpx = 2;
