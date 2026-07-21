@@ -11,7 +11,7 @@ static char *font2[] = {
     "CaskaydiaMono NFM"
 };
 
-static int borderpx = 2;
+static int borderpx = 3;
 
 /*
  * Override/adjust fontsize of choosen monitors:
